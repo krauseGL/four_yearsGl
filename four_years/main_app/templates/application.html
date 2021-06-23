@@ -1,0 +1,186 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Анкета абитуриента{% endblock %}
+{% block head_title %}Анкета абитуриента{% endblock %}
+
+{% block content %}
+<div class="form">
+    <form action="{% url 'main_app:application' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="section__application">
+            <div class="row">
+                <div class="column input_text">
+                    <table>
+                        <tr>
+                            <td>{{ form.first_name.label }}</td>
+                            <td>{{ form.first_name }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ form.last_name.label }}</td>
+                            <td>{{ form.last_name }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ form.patronymic.label }}</td>
+                            <td>{{ form.patronymic }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ form.series_passport.label }}</td>
+                            <td>{{ form.series_passport }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ form.number_passport.label }}</td>
+                            <td>{{ form.number_passport }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ form.date_of_birth.label }}</td>
+                            <td id="date_of_birth">{{ form.date_of_birth }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ form.school.label }}</td>
+                            <td>{{ form.school }}</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="column input_text">
+                    <table>
+                        <tr>
+                            <td>{{ form.region.label }}</td>
+                            <td>{{ form.region }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ form.locality.label }}</td>
+                            <td>{{ form.locality }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ form.street.label }}</td>
+                            <td>{{ form.street }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ form.house.label }}</td>
+                            <td>{{ form.house }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ form.housing.label }}</td>
+                            <td>{{ form.housing }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ form.numbers_house.label }}</td>
+                            <td>{{ form.numbers_house }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ form.index.label }}</td>
+                            <td>{{ form.index }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="row row__space_between align__items__center">
+                <div class="column">
+                    <table>
+                        <tr>
+                            <td>{{ form.university.label }}</td>
+                            <td>{{ form.university }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ form.specialization.label }}</td>
+                            <td>{{ form.specialization }}</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="column description">
+                    <p id="description" class="description__text">Описание</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="column file_input">
+                    <table>
+                        <tr>
+                            <td>{{ form.file_passport.label }}</td>
+                            <td>{{ form.file_passport }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ form.file_certificate.label }}</td>
+                            <td>{{ form.file_certificate }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ form.file_statement.label }}</td>
+                            <td>{{ form.file_statement }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ form.file_other.label }}</td>
+                            <td>{{ form.file_other }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="column">
+                <div class="errors__wrapper">
+                    {% for field in form %}
+                    {% for error in field.errors %}
+                    <span class="error">
+                            {{ error }}
+                    </span>
+                    {% endfor %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="column input_btn column__center">
+                <input type="submit" value="Сохранить"/>
+                <input type="hidden" name="next" value="{% url 'main_app:index' %}"/>
+            </div>
+        </div>
+    </form>
+
+</div>
+{% endblock %}
+
+
+{% block javascript %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        var array = [];
+        // отслеживаем событие отправки формы
+        $('#id_university').change(function () {
+            // создаем AJAX-вызов
+            $.ajax({
+                data: $(this).serialize(), // получаяем данные формы
+                url: "{% url 'main_app:get_spec' %}",
+                // если успешно, то
+                success: function (response) {
+                    $('#id_specialization').empty();
+                    $.each(response.result, function(key, item) {
+                        $(`#id_specialization`).append('<option value="' + item.id + '">' + item.specialization + '</option>');
+                    });
+                    array = response.result;
+                    var elem = response.result[0];
+                    $('#description').text(elem.description);
+                },
+                // если ошибка, то
+                error: function (response) {
+                    // предупредим об ошибке
+                    console.log(response.responseJSON.errors)
+                }
+            });
+            return false;
+        });
+        $('#id_specialization').change(function () {
+            var select_val = parseInt($('#id_specialization').val());
+            var elem = $.grep(array, function (el) {
+                return el.id === select_val;
+            })[0];
+            console.log(array);
+            console.log(elem.description);
+            console.log(select_val);
+            $('#description').text(elem.description);
+            return false;
+        });
+    });
+</script>
+{% endblock javascript %}

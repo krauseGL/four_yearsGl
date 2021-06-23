@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Личный кабинет{% endblock %}
+
+{% block head_title %}Личный кабинет{% endblock %}
+
+{% block content %}
+<div class="row section__main item__center">
+    <div class="section__left img_sova">
+        <img src="{% static 'img/sova.png' %}">
+    </div>
+    <div class="section__right">
+        <table class="account__table">
+            <tr>
+                <td>Фамилия</td>
+                <td><p class="personal__info">{{ user.first_name }}</p></td>
+            </tr>
+            <tr>
+                <td>Имя</td>
+                <td><p class="personal__info">{{ user.last_name }}</p></td>
+            </tr>
+            <tr>
+                <td>Электронная почта</td>
+                <td><p class="personal__info">{{ user.email }}</p></td>
+            </tr>
+            <tr>
+                <td>Статус анкеты</td>
+                <td>
+                    <p class="personal__info">
+                        {% if application %}
+                            {% if application.status %}
+                                Принято
+                            {% else %}
+                                На расмотрении
+                            {% endif %}
+                        {% else %}
+                            Вы еще не подали анкету.
+                        {% endif %}
+                    </p>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% load static %}
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Главная{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    {% block styles %}{% endblock %}
+</head>
+    <body>
+    <div class="layout">
+        <div class="layout__block">
+            <header class="header">
+                <h1 class="title">
+                    Лучшее вложение четырех лет молодости
+                </h1>
+            </header>
+        </div>
+        <div class="layout__block">
+            <section class="section__main">
+                {% block content %}
+                {% endblock %}
+            </section>
+        </div>
+
+        {% block footer %}
+        <div class="layout__block shrink">
+            <footer class="footer">
+                <div class="footer__item">
+                </div>
+                <div class="footer__item">
+                </div>
+                <div class="footer__item m-r">
+                    <a class="footer__link" href="{% url 'main_app:index' %}">
+                        На главную
+                    </a>
+                </div>
+                <div class="footer__item shrink">
+                   <span class="span">
+                       Контакты: +7 (999) 777 7777
+                   </span>
+                </div>
+            </footer>
+        </div>
+        {% endblock %}
+    </div>
+    {% block javascript %}
+    {% endblock %}
+    </body>
+</html>

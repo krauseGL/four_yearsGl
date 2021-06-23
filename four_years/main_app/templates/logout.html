@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row row__center">
+    <div class="column column__center">
+        <p class="logout">
+            До скорых встреч <span class="username">{{ user.first_name }} {{ user.last_name }}</span> !
+        </p>
+        <a href="{% url 'main_app:index' %}" class="btn"> На главную</a>
+    </div>
+</div>
+{% endblock %}

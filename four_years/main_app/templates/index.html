@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="auth_buttons">
+    <div class="row">
+        {% if user.is_authenticated %}
+        <div class="column column__center">
+            <p>Вы авторизованны как <span class="username">{{ user.first_name }} {{ user.last_name }}</span></p>
+            <a href="{% url 'main_app:logout' %}" class="btn">Выйти</a>
+        </div>
+        {% else %}
+        <div class="column">
+            <a href="{% url 'main_app:registration' %}" class="btn">Регистрация</a>
+        </div>
+        <div class="column">
+            <a href="{% url 'main_app:auth' %}" class="btn">Авторизация</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+<div class="row row__center">
+    <div class="column">
+        <h1>
+            Онлайн подача документов
+        </h1>
+    </div>
+</div>
+{% if user.is_authenticated %}
+<div class="row main">
+    <div class="column column__center">
+        <img src="{% static 'img/sova.png' %}">
+        <a href="{% url 'main_app:application' %}" class="btn">Подать анкету</a>
+    </div>
+    <div class="column column__center">
+        <img src="{% static 'img/sova2.png' %}">
+        <a href="{% url 'main_app:account' %}" class="btn">Личный кабинет</a>
+    </div>
+</div>
+{% else %}
+<div class="row main">
+    <div class="column column__center">
+        <img src="{% static 'img/sova.png' %}">
+        <a href="{% url 'main_app:auth' %}" class="btn">Подать анкету</a>
+    </div>
+    <div class="column column__center">
+        <img src="{% static 'img/sova2.png' %}">
+        <a href="{% url 'main_app:auth' %}" class="btn">Личный кабинет</a>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
